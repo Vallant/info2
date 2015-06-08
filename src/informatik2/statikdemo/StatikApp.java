@@ -8,8 +8,11 @@ package informatik2.statikdemo;
 import informatik2.statik.LKW;
 import informatik2.statik.Querschnitt;
 import informatik2.statik.Traeger;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Scanner;
 
 
 /**
@@ -35,11 +38,38 @@ public class StatikApp
         catch (Exception ignore) { }
         
         //Lukas Part
-        //testgit
-        Querschnitt querschnitt = new Querschnitt(1, 1, 1, 1);
+         
+        Scanner scan = new Scanner (System.in);
+        //input
+        System.out.print("Geben Sie das Gesamtgewicht des Zweiachsers ein [5 - 10 t]: ");
+        double gesamt_gewicht_in = scan.nextDouble();
+
+        System.out.print("Geben Sie den Achsabstand des Zweiachsers ein [4 - 10 m]: ");
+        double achsenabstand_in = scan.nextDouble();
+
+        System.out.print("Geben Sie die Länge der Brücke ein [5 - 20 m]: ");
+        double laenge_bruecke_in = scan.nextDouble();
+
+        scan.nextLine(); /* !!! */
+
+        System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
+        String querschnitt_in = scan.nextLine();
+
+        String parts[] = querschnitt_in.split(" ");
+
+        double b_in = Double.parseDouble(parts[0]);
+        double h_in = Double.parseDouble(parts[1]);
+        double s_in = Double.parseDouble(parts[2]);
+        double t_in = Double.parseDouble(parts[3]);
+       
+        //fill objects
+
+        lkw = new LKW(1, 1, gesamt_gewicht_in, "X", "y");        
+        Querschnitt querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
         traeger = new Traeger(1, 1, querschnitt);
-        lkw = new LKW(1, 1, 1, "X", "y");
+        
         position_max_biegemoment = -1;
+        
     }
     
     
