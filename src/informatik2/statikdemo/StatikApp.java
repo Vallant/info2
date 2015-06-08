@@ -35,6 +35,7 @@ public class StatikApp
         catch (Exception ignore) { }
         
         //Lukas Part
+        //testgit
         Querschnitt querschnitt = new Querschnitt(1, 1, 1, 1);
         traeger = new Traeger(1, 1, querschnitt);
         lkw = new LKW(1, 1, 1, "X", "y");
