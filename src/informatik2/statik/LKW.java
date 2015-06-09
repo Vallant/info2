@@ -13,9 +13,10 @@ public class LKW extends Fahrzeug
 {
     private String firma;
     private String fahrer;
+    private double achsen_abstand;
     
     public LKW(double hoehe, double breite, double gesamtGewicht, String firma, 
-            String fahrer)
+            String fahrer, double achsenAbstand)
             throws Exception
     {
         super(hoehe, breite, gesamtGewicht);
@@ -25,21 +26,26 @@ public class LKW extends Fahrzeug
             throw new Exception("fahrer darf nicht leer sein");
         this.firma = firma;
         this.fahrer = fahrer;
+        this.achsen_abstand = achsenAbstand;
     }
     
-    String getFirma()
+    public String getFirma()
     {
         return firma;
     }
-    String getFahrer()
+    public String getFahrer()
     {
         return fahrer;
     }
-    void setFirma(String firma)
+    public double getAchsenAbstand()
+    {
+        return achsen_abstand;
+    }
+    public void setFirma(String firma)
     {
         this.firma = firma;
     }
-    void setFahrer(String fahrer)
+    public void setFahrer(String fahrer)
     {
         this.fahrer = fahrer;
     }
@@ -48,10 +54,10 @@ public class LKW extends Fahrzeug
     public String toString()
     {
         String output = super.toString();
-        return (output += String.format("\nLKW (firma : %s, fahrer : %s)", 
-                firma, fahrer));
+        return (output += String.format("\nLKW --> Firma : %s, Fahrer : %s"
+                + ", Achsenabstand : %.2f m, Last-vorderachse : %.2f kN, Last-Hinterachse : %.2f kN", 
+                firma, fahrer, achsen_abstand, achsLastVA(), achsLastHA()));
     }
-    
     public double achsLastVA()
     {
         return gesamtGewicht / 3.0;

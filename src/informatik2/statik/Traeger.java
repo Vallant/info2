@@ -42,7 +42,14 @@ public class Traeger
         this.querschnitt = new Querschnitt(querschnitt);
     }
     
-    
+    public double getLaenge()
+    {
+        return laenge;
+    }
+    public double getDichte()
+    {
+        return dichte;
+    }
     public double getMasse()
     {
         return querschnitt.getFlaeche() * laenge * dichte;
@@ -52,8 +59,9 @@ public class Traeger
     public String toString()
     {
         String output = querschnitt.toString();
-        return (output += String.format("\nTraeger (laenge: %.2f, dichte: %.2f)", 
-                laenge, dichte));
+        return (output += String.format("\nTraeger --> Laenge: %.2f m, Dichte: %.2f kg/dm^3"
+                + ",Masse : %.2f kg)", 
+                laenge, dichte, getMasse()));
         
     }
 }

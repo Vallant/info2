@@ -24,8 +24,10 @@ public class StatikApp
     private Plotter plotter;
     private final Traeger traeger;
     private final LKW lkw;
+    private final Querschnitt querschnitt;
     private double[][] biegemoment_werte;
     private int position_max_biegemoment;
+    
     
     
     public StatikApp() throws Exception
@@ -64,9 +66,9 @@ public class StatikApp
        
         //fill objects
 
-        lkw = new LKW(1, 1, gesamt_gewicht_in, "X", "y");        
-        Querschnitt querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
-        traeger = new Traeger(1, 1, querschnitt);
+        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, "LKW Walter", "Josef", achsenabstand_in);        
+        querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
+        traeger = new Traeger(laenge_bruecke_in, 7.85, querschnitt);
         
         position_max_biegemoment = -1;
         
@@ -86,7 +88,29 @@ public class StatikApp
     {
         //Phillip part
         //....
+        System.out.println("----------Statikberechnung für:");
         
+        lkw.toString();
+        System.out.println("auf Brücke: Bruecke --> konst. Fahrbahndeckenlast: ??" + "Länge: " + traeger.getLaenge() + "m."); // Fahrbahndeckenlast?!
+        System.out.println("Gesamt-Gleichlast: ??"); //Gesamtgleichlast?!
+        querschnitt.toString();
+        
+        /* BEISPIEL TEXT
+        
+        LKW: LKW --> Achsabstand: 6,0m, Firma: BauInc, Fahrer: Max Mustermann, Last-Vorderachse: 32,70kN, Last-Hinterachse: 65,40kN.
+	Fahrzeug --> Höhe: 3,8m, Breite: 2,6m, Gesamtgewicht: 10000,00kg.
+	auf Brücke: Bruecke --> konst. Fahrbahndeckenlast: 3,00kN/m, Länge: 20,0m.
+	Gesamt-Gleichlast: 6,15kN/m.
+	Trägerpaar: Träger --> Länge: 20,0m, Dichte: 7,85kg/dm^3, Masse: 2242,27kg.
+	Querschnitt --> b: 30,0cm, h: 30,0cm, s: 1,1cm, t: 1,9cm
+	Querschnittsfläche: 142,82cm^2, Flächenträgheitsmoment: 24186,78cm^4.
+
+        MaxMomente= 702,90kNm  bei Brückenposition= 9,40m  (LKW-VA Position=15,40m)
+        Max. Biegespannung ist: 435,92N/mm^2
+        LKW darf Brücke NICHT befahren!!
+        
+        */
+                
         plotter.plot();
     }
     

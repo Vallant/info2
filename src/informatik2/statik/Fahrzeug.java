@@ -61,7 +61,7 @@ public class Fahrzeug {
     @Override
     public String toString()
     {
-        return String.format("Fahrzeug (hoehe: %.2f, breite: %.2f, gesamtGewicht: "
-                + "%.2f)", hoehe, breite, gesamtGewicht);
+        return String.format("Fahrzeug --> Hoehe: %.2f m, Breite: %.2f m , gesamtGewicht: "
+                + "%.2f kg", hoehe, breite, gesamtGewicht);
     }
 }

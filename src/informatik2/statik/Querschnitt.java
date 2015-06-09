@@ -57,8 +57,8 @@ public class Querschnitt
     @Override
     public String toString()
     {
-        return String.format("Querschnitt (breite : %.2f, hoehe : %.2f, "
-                + "stegBreite: %.2f, stegHoehe: %.2f)", breite, hoehe, 
+        return String.format("Querschnitt: b: %.2f, h: %.2f, "
+                + "s: %.2f, t: %.2f)", breite, hoehe, 
                 stegBreite, stegHoehe);
     }
 }
