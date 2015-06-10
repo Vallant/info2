@@ -77,8 +77,13 @@ public class StatikApp
     
     public void berechne()
     {
-        //Phillip part
-        //....
+        
+        double M_D;
+        double x;
+        double L;
+        double q;
+        
+        M_D = ((x/L) * ((L-x) / L)) / 2 * q * L*L; 
         
         
         plotter.addDataSet(biegemoment_werte[position_max_biegemoment], "Biegemomente");
