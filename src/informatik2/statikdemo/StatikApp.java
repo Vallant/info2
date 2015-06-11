@@ -19,6 +19,8 @@ import java.util.Scanner;
  *
  * @author stephan
  */
+
+
 public class StatikApp
 {
     private Plotter plotter;
@@ -27,6 +29,25 @@ public class StatikApp
     private final Querschnitt querschnitt;
     private double[][] biegemoment_werte;
     private int position_max_biegemoment;
+    
+    
+    private int getCase(int position, position)
+    {
+        if()
+            return 1;
+        else if(position)
+            return 2;
+        else if()
+            return 3;
+        else if()
+            return 4;
+        else if()
+            return 5;
+        else if()
+            return 6;
+        else if()
+            return 7;
+    }
     
     
     
@@ -81,66 +102,57 @@ public class StatikApp
     {
         
       
-        double M_D;
-        double x;
-        double q;
-        int laenge = (int)lkw.getAchsenAbstand();
-        int max_position = (int)(traeger.getLaenge()*10) + (laenge*10);
+        int laenge = (int)lkw.getAchsenAbstand(); // LKW Länge
+        int max_position = (int)(traeger.getLaenge()*10) + (laenge*10); //Letzte berechnung
         int position_va;
         int position_ha;
         int auswahl;
+        double last;
+        boolean befahrbar = true;
+        double belastung;
+        double maxBelastung = 0;
+        int i;
         
 
         
-        
-double last = ((position/laenge)* ((laenge-position) / laenge)) / 2 * 3000 * 
-                laenge*laenge;
-       
-       double d_y = traeger.
-       
-
 
         for(position_va=0 ; position_va < max_position ; position_va+=10)   //lkw position
         {
             position_ha = position_va - laenge;
+            last = ((position_va/laenge)* ((laenge-position_va) / laenge)) / 2 * 3000 * 
+                    laenge*laenge;
             auswahl = lkwCase();
             
-            for(int i = 0 ; i < max_position ; i+=10)
+            for(i = 0 ; i < max_position ; i+=10)
             {
               switch(auswahl)
               {
                   case 1:
-                  
+                      belastung = (x / L) * (L-a_VA) * P_Z_VA
                   case 2:
-                      
+                      belastung = ((L-x) / L) * a_VA * P_Z_VA
                   case 3:
-                      
+                      belastung = (x / L) * (L-a_HA) * P_Z_HA
                   case 4:
-                      
+                      belastung = ((L-x) / L) * a_HA * P_Z_HA
                   case 5:
-                      
+                      belastung = (M_D * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2
                   case 6:
-                      
+                      belastung =
                   case 7:
+                      belastung =
               
               }
-              // wert in array speichern.     
+              biegemoment_werte[position_va][i] = belastung;
+              if(belastung > maxBelastung)
+                  maxBelastung = belastung;
             }
            
         }
-            
         
-               
-       /*
-       int lkwCase(int position, int laenge)
-        {
-            if()
-                
-            else if() //vergleich float?!
+        if(maxBelastung > 300)
+            befahrbar = false;
             
-            else
-            
-        }
         
 
 
