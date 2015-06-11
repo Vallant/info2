@@ -33,7 +33,7 @@ public class StatikApp
     
     private int getCase(int position_va, int position_ha, int x, int laenge)
     {
-        if     (position_ha < 0 && x < position_va) // Hinterachse nicht auf der Brücke, 
+        if     (position_ha < 0 && x < position_va) 
             return 1;
         else if(position_ha < 0 && x < position_va)
             return 2;
