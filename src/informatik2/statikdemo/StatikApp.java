@@ -71,6 +71,8 @@ public class StatikApp
         traeger = new Traeger(laenge_bruecke_in, 7.85, querschnitt);
         
         position_max_biegemoment = -1;
+        biegemoment_werte = new double[(int)(traeger.getLaenge()+
+                        lkw.getAchsenAbstand())*10][(int)traeger.getLaenge()*10];
         
     }
     
@@ -78,14 +80,70 @@ public class StatikApp
     public void berechne()
     {
         
+      
         double M_D;
         double x;
-        double L;
         double q;
+        int laenge = (int)lkw.getAchsenAbstand();
+        int max_position = (int)(traeger.getLaenge()*10) + (laenge*10);
+        int position_va;
+        int position_ha;
+        int auswahl;
         
-        M_D = ((x/L) * ((L-x) / L)) / 2 * q * L*L; 
+
         
         
+double last = ((position/laenge)* ((laenge-position) / laenge)) / 2 * 3000 * 
+                laenge*laenge;
+       
+       double d_y = traeger.
+       
+
+
+        for(position_va=0 ; position_va < max_position ; position_va+=10)   //lkw position
+        {
+            position_ha = position_va - laenge;
+            auswahl = lkwCase();
+            
+            for(int i = 0 ; i < max_position ; i+=10)
+            {
+              switch(auswahl)
+              {
+                  case 1:
+                  
+                  case 2:
+                      
+                  case 3:
+                      
+                  case 4:
+                      
+                  case 5:
+                      
+                  case 6:
+                      
+                  case 7:
+              
+              }
+              // wert in array speichern.     
+            }
+           
+        }
+            
+        
+               
+       /*
+       int lkwCase(int position, int laenge)
+        {
+            if()
+                
+            else if() //vergleich float?!
+            
+            else
+            
+        }
+        
+
+
         plotter.addDataSet(biegemoment_werte[position_max_biegemoment], "Biegemomente");
     }
     
