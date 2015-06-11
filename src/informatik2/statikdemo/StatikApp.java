@@ -31,21 +31,21 @@ public class StatikApp
     private int position_max_biegemoment;
     
     
-    private int getCase(int position_va, int position_ha, int position, int laenge)
+    private int getCase(int position_va, int position_ha, int x, int laenge)
     {
-        if     (position_ha < 0 && position < position_va)
+        if     (position_ha < 0 && x < position_va) // Hinterachse nicht auf der Brücke, 
             return 1;
-        else if(position_ha < 0 && position < position_va)
+        else if(position_ha < 0 && x < position_va)
             return 2;
-        else if(position_ha > 0 && position_va < laenge && position < position_ha)
+        else if(position_ha > 0 && position_va < laenge && x < position_ha)
             return 3;
-        else if(position_ha > 0 && position_va < laenge && position > position_ha && position < position_va) 
+        else if(position_ha > 0 && position_va < laenge && x > position_ha && x < position_va) 
             return 4;
-        else if(position_ha > 0 && position_va < laenge && position > position_va)
+        else if(position_ha > 0 && position_va < laenge && x > position_va)
             return 5;
-        else if(position_va > laenge && position < position_ha)
+        else if(position_va > laenge && x < position_ha)
             return 6;
-        else if(position_va > laenge && position > position_ha)
+        else if(position_va > laenge && x > position_ha)
             return 7;
         
         return 0;
