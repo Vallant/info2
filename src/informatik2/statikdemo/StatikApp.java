@@ -35,7 +35,7 @@ public class StatikApp
     {
         if()
             return 1;
-        else if(position)
+        else if()
             return 2;
         else if()
             return 3;
