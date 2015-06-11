@@ -4,7 +4,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYDotRenderer;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
@@ -17,7 +17,7 @@ public class Plotter
 {  
     private final NumberAxis x_achsen_name;
     private final NumberAxis y_achsen_name;
-    private final XYDotRenderer punkt_renderer;
+    private final XYSplineRenderer spline_renderer;
     private XYSeriesCollection daten_kollection;
     private final String fenster_name;
     
@@ -37,10 +37,9 @@ public class Plotter
             throw new Exception("Fenstername darf nicht leer sein!");
         this.x_achsen_name = new NumberAxis(x_achsen_name);
         this.y_achsen_name = new NumberAxis(y_achsen_name);
-        punkt_renderer = new XYDotRenderer();
-        punkt_renderer.setDotHeight(punkt_groesse);
-        punkt_renderer.setDotWidth(punkt_groesse);
+        spline_renderer = new XYSplineRenderer();
         this.fenster_name = fenster_name;
+        daten_kollection = new XYSeriesCollection();
         
     }
     
@@ -60,7 +59,7 @@ public class Plotter
             throw new Exception("Kein Datenset zum Anzeigen!");
         
         ApplicationFrame frame = new ApplicationFrame(fenster_name);
-        XYPlot plot = new XYPlot(daten_kollection, x_achsen_name, y_achsen_name, punkt_renderer);
+        XYPlot plot = new XYPlot(daten_kollection, x_achsen_name, y_achsen_name, spline_renderer);
         JFreeChart chart = new JFreeChart(plot);
         ChartPanel chartPanel = new ChartPanel(chart);
         frame.setContentPane(chartPanel);
