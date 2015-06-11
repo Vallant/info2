@@ -31,21 +31,21 @@ public class StatikApp
     private int position_max_biegemoment;
     
     
-    private int getCase(int position, position)
+    private int getCase(int position_va, int position_ha, int position, int laenge)
     {
-        if()
+        if(position_ha < 0 && )
             return 1;
-        else if()
+        else if(position_ha < 0 &&)
             return 2;
-        else if()
+        else if(position_ha > 0 && position_va < laenge && position < position_ha)
             return 3;
-        else if()
+        else if(position_ha > 0 && position_va < laenge && position > position_ha && position < position_va) 
             return 4;
-        else if()
+        else if(position_ha > 0 && position_va < laenge && position > position_va)
             return 5;
-        else if()
+        else if(position_va > laenge &&)
             return 6;
-        else if()
+        else if(position_va > laenge &&)
             return 7;
     }
     
@@ -111,7 +111,7 @@ public class StatikApp
         boolean befahrbar = true;
         double belastung;
         double maxBelastung = 0;
-        int i;
+        int x = 0;
         
 
         
@@ -121,27 +121,26 @@ public class StatikApp
             position_ha = position_va - laenge;
             last = ((position_va/laenge)* ((laenge-position_va) / laenge)) / 2 * 3000 * 
                     laenge*laenge;
-            auswahl = lkwCase();
-            
-            for(i = 0 ; i < max_position ; i+=10)
+                        
+            for(i = 0 ; x < max_position ; x+=10)
             {
+              auswahl = lkwCase(position_va, position_ha, x, traeger.getLaenge());
               switch(auswahl)
               {
                   case 1:
-                      belastung = (x / L) * (L-a_VA) * P_Z_VA
+                      belastung = 
                   case 2:
-                      belastung = ((L-x) / L) * a_VA * P_Z_VA
+                      belastung = 
                   case 3:
-                      belastung = (x / L) * (L-a_HA) * P_Z_HA
+                      belastung = 
                   case 4:
-                      belastung = ((L-x) / L) * a_HA * P_Z_HA
+                      belastung = 
                   case 5:
-                      belastung = (M_D * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2
+                      belastung = 
                   case 6:
                       belastung =
                   case 7:
                       belastung =
-              
               }
               biegemoment_werte[position_va][i] = belastung;
               if(belastung > maxBelastung)
