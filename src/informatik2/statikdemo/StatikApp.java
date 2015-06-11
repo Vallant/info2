@@ -145,7 +145,7 @@ public class StatikApp
                   case 7:
                       belastung =
               }
-              biegemoment_werte[position_va][i] = belastung;
+              biegemoment_werte[position_va][x] = belastung;
               if(belastung > maxBelastung)
                   maxBelastung = belastung;
             }
