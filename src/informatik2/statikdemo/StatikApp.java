@@ -105,7 +105,7 @@ public class StatikApp
         
       
         int lkwlaenge = (int)lkw.getAchsenAbstand(); // LKW Länge
-        int max_position = (int)(traeger.getLaenge()*10) + (lkwlaenge*10); //Letzte berechnung
+        int max_position = (int)(traeger.getLaenge()*10) + (lkwlaenge*10);
         int brueckenlaenge = (int)traeger.getLaenge();
         int position_va;
         int position_ha;
@@ -119,19 +119,20 @@ public class StatikApp
 
         
 
-        for(position_va=0 ; position_va < max_position ; position_va+=10)   //lkw position
+        for(position_va=0 ; position_va < max_position ; position_va+=10)
         {
             position_ha = position_va - lkwlaenge;
-            last = ((position_va/lkwlaenge)* ((lkwlaenge-position_va) / lkwlaenge)) / 2 * 3000 * 
-                    lkwlaenge*lkwlaenge;
-                        
+        
             for(x = 0 ; x < max_position ; x+=10)
             {
+              last = ((position_va/lkwlaenge)* ((lkwlaenge-position_va) / lkwlaenge)) / 2 * 3000 * 
+                       lkwlaenge*lkwlaenge;
+                
               auswahl = StatikApp.getCase(position_va, position_ha, x, brueckenlaenge);
               switch(auswahl)
               {
                   case 1:
-                      belastung = 
+                      belastung =  
                   case 2:
                       belastung = 
                   case 3:
