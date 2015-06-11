@@ -122,39 +122,69 @@ public class StatikApp
         int auswahl;
         double last = 0;
         double belastung = 0;
+        
 
         int x = 0;
         
         for(position_va=0 ; position_va < max_position ; position_va+=10)
         {
             position_ha = position_va - lkwlaenge;
-        
+            last = ((position_va/lkwlaenge)* ((lkwlaenge-position_va) / lkwlaenge)) / 2 * 3000 * 
+                     lkwlaenge*lkwlaenge;
+            
             for(x = 0 ; x < max_position ; x+=10)
             {
-              last = ((position_va/lkwlaenge)* ((lkwlaenge-position_va) / lkwlaenge)) / 2 * 3000 * 
-                       lkwlaenge*lkwlaenge;
                 
               auswahl = StatikApp.getCase(position_va, position_ha, x, brueckenlaenge);
               switch(auswahl)
               {
+//                1. MZ_1 (x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA();
+//                2. MZ_1 (brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA();
+//                3. MZ_2 (x / brueckenlaenge) * (brueckenlaenge-position_ha) * lkw.achslastHA();
+//                4. MZ_2 ((brueckenlanege-x) / brueckenlaenge) * position_ha * lkw.achslastHA();
                   case 1:
-                      belastung = (x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA();
+                  {
+                      belastung = (last * 1.5 + (((x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA()) * 2)) / 2;
+                      break;
+                  }
                   case 2:
-                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA();
+                  {
+                      belastung = (last * 1.5 + (((brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA()) * 2) / 2;
+                      break;
+                  }
                   case 3:
-                      belastung = (x / brueckenlaenge) * (brueckenlaenge-position_ha) * lkw.achsLastHA();
+                  {
+                      belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                      break;
+                  }
                   case 4:
-                      belastung = 0;
+                  {    
+                      belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                      break;
+                  }
                   case 5:
-                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_ha * lkw.achsLastHA();
+                  {
+                      belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                      break;
+                  }
                   case 6:
-                      belastung = 0;
+                  {
+                      belastung = (last * 1,5 + M_Z_2 * 2) / 2;
+                      break;
+                  }
                   case 7:
-                      belastung = 0;
+                  {
+                      belastung = (last * 1,5 + M_Z_2 * 2) / 2;
+                      break;
+                  }
               }
               biegemoment_werte[position_va][x] = belastung;
               if(belastung > maxBiegespannung)
-                  maxBiegespannung = belastung;
+              {
+                maxBiegespannung = belastung;
+                position_max_biegemoment = x;
+              }
+              
             }
            
         }
