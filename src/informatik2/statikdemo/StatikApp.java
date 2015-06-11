@@ -43,10 +43,12 @@ public class StatikApp
             return 4;
         else if(position_ha > 0 && position_va < laenge && position > position_va)
             return 5;
-        else if(position_va > laenge &&)
+        else if(position_va > laenge && position < position_ha)
             return 6;
-        else if(position_va > laenge &&)
+        else if(position_va > laenge && position > position_ha)
             return 7;
+        
+        return 0;
     }
     
     
