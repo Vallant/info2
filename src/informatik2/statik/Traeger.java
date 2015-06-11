@@ -55,6 +55,12 @@ public class Traeger
         return querschnitt.getFlaeche() * laenge * dichte;
     }
     
+    public Querschnitt getQuerschnitt()
+    {
+        return querschnitt;
+    }
+
+    
     @Override
     public String toString()
     {
