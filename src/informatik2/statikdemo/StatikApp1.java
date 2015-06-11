@@ -25,11 +25,11 @@ public class StatikApp1
         Querschnitt q2;
         try
         {
-        fahrzeug1 = new Fahrzeug(10, 20, 30);
-        LKW tmpLKW = new LKW(30, 40, 50, "Firma", "Fahrer");
+        fahrzeug1 = new Fahrzeug(10, 20, 30, 1);
+        LKW tmpLKW = new LKW(30, 40, 50, "Firma", "Fahrer", 1);
         fahrzeug2 = new Fahrzeug(tmpLKW);
         
-        lkw1 = new LKW(50, 60, 70, "Firma2", "Fahrer2");
+        lkw1 = new LKW(50, 60, 70, "Firma2", "Fahrer2", 1);
         
         lkw2 = tmpLKW;
         Querschnitt q1;
@@ -70,7 +70,7 @@ public class StatikApp1
             
             System.out.println("===============\n");
             System.out.println(t1.toString());
-            System.out.println("masse: " + t1.getMasse());
+            System.out.println("masse: " + t1.getGewicht());
 
         }
         catch(Exception ex)

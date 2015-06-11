@@ -20,6 +20,8 @@ public class Querschnitt
             double stegBreite, double stegHoehe)
             throws Exception
     {
+        
+        
         if(breite < stegBreite)
             throw new Exception("breite muss groesser sein als stegBreite!");
         if(hoehe < 2*stegHoehe)
@@ -28,10 +30,12 @@ public class Querschnitt
         if(hoehe <=0 || breite <= 0 || stegBreite <= 0 || stegHoehe <= 0)
             throw new Exception("Alle parameter muessen groesser 0 sein");
         
-        this.breite = breite;
-        this.hoehe = hoehe;
-        this.stegBreite = stegBreite;
-        this.stegHoehe = stegHoehe;
+        
+        //Eingabewerte in CM
+        this.breite = breite * 10;
+        this.hoehe = hoehe * 10;
+        this.stegBreite = stegBreite * 10;
+        this.stegHoehe = stegHoehe * 10;
     }
     
     public Querschnitt(Querschnitt other)
@@ -42,16 +46,41 @@ public class Querschnitt
         this.stegHoehe = other.stegHoehe;
     }
     
-    
+    // mm^2
     public double getFlaeche()
     {
         return breite * hoehe - (breite - stegBreite) * (hoehe - 2* stegHoehe);
     }
     
+    // mm^4
     public double getIy()
     {
         return (breite * Math.pow(hoehe, 3) - (breite - stegBreite) * 
                 Math.pow((hoehe - 2* stegHoehe), 3)) / 12.0;
+    }
+    
+    // mm
+    public double getBreite()
+    {
+        return breite;
+    }
+    
+    // mm
+    public double getHoehe()
+    {
+        return hoehe;
+    }
+    
+    // mm
+    public double getStegBreite()
+    {
+        return stegBreite;
+    }
+    
+    // mm
+    public double getStegHoehe()
+    {
+        return stegHoehe;
     }
     
     @Override

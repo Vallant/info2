@@ -11,8 +11,12 @@ package informatik2.statik;
  */
 public class Traeger 
 {
+    // m
     private final double laenge;
+    
+    // kg/dm^3
     private final double dichte;
+    
     private final Querschnitt querschnitt;
     
     public Traeger(double laenge, double dichte, double hoehe, double breite, 
@@ -42,17 +46,29 @@ public class Traeger
         this.querschnitt = new Querschnitt(querschnitt);
     }
     
+    public Traeger(Traeger other)
+    {
+        this.laenge = other.getLaenge();
+        this.dichte = other.getDichte();
+        this.querschnitt = new Querschnitt(other.getQuerschnitt());
+    }
+    
+    // m
     public double getLaenge()
     {
         return laenge;
     }
+    
+    // kg/dm^3
     public double getDichte()
     {
         return dichte;
     }
-    public double getMasse()
+    
+    // kg
+    public double getGewicht()
     {
-        return querschnitt.getFlaeche() * laenge * dichte;
+        return querschnitt.getFlaeche() * laenge * dichte / 1000; // mm^2 / 10000 * (m * 10) * kg / dm^3
     }
     
     public Querschnitt getQuerschnitt()
@@ -66,8 +82,8 @@ public class Traeger
     {
         String output = querschnitt.toString();
         return (output += String.format("\nTraeger --> Laenge: %.2f m, Dichte: %.2f kg/dm^3"
-                + ",Masse : %.2f kg)", 
-                laenge, dichte, getMasse()));
+                + ", Gewicht : %.2f kg)", 
+                laenge, dichte, getGewicht()));
         
     }
 }

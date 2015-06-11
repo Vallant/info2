@@ -8,10 +8,7 @@ package informatik2.statikdemo;
 import informatik2.statik.LKW;
 import informatik2.statik.Querschnitt;
 import informatik2.statik.Traeger;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
@@ -29,8 +26,136 @@ public class StatikApp
     private final Querschnitt querschnitt;
     private double[][] biegemoment_werte;
     private int position_max_biegemoment;
+    private boolean darfPassieren;
+    static private final double erdBeschleunigung = 9.81; // m/s^2
+    static private final double maxBiegemoment = 300; // N/mm^2
+    static private final double traegerDichte = 7.85; // kg/dm^3
+    static private final double sicherheitEigenlast = 1.5;
+    static private final double sicherheitVerkehrslast = 2;
+    static private final double eigenLast = 3000; // N/m
+    private double maxBiegespannung;
+    
+
     
     
+    
+    public StatikApp() throws Exception
+    {
+        try
+        {
+            plotter = new Plotter(5, "Brückenposition in m", "Biegemoment in kNm",
+                    "Diagramm zum maximalen Biegemoment");
+        }
+        catch (Exception ignore) { }
+        
+        String firma;
+        String fahrer;
+        double achsenabstand_in = 0;
+        double gesamt_gewicht_in = 0;
+        double laenge_bruecke_in = 0;
+        double breite_lkw = 0;
+        double hoehe_lkw = 0;
+        
+        double b_in = 0;
+        double h_in = 0;
+        double s_in = 0;
+        double t_in = 0;
+        Scanner scan = new Scanner (System.in);
+        //input
+        
+        do
+        {
+            System.out.print("Geben Sie bitte den Namen der Firma ein: ");
+            firma = scan.nextLine();
+        }
+        while(firma.isEmpty());
+        
+        
+        do
+        {
+            System.out.print("Geben Sie bitte den Namen des Fahrers ein: ");
+            fahrer = scan.nextLine();
+        }
+        while(fahrer.isEmpty());
+        
+        do
+        {
+            System.out.print("Geben Sie das Gesamtgewicht des Zweiachsers ein [5 - 10 t]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            gesamt_gewicht_in = scan.nextDouble();
+        }   
+        while(gesamt_gewicht_in < 5 || gesamt_gewicht_in > 10);
+        
+        do
+        {
+            System.out.print("Geben Sie den Achsabstand des Zweiachsers ein [4 - 10 m]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            achsenabstand_in = scan.nextDouble();
+        }   
+        while(achsenabstand_in < 4 || achsenabstand_in > 10);
+        
+        
+        do
+        {
+            System.out.print("Geben Sie die Länge der Brücke ein [5 - 20 m]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            laenge_bruecke_in = scan.nextDouble();
+        }   
+        while(laenge_bruecke_in < 5 || laenge_bruecke_in > 20);
+
+        
+        
+
+
+        do
+        {
+            System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
+            String querschnitt_in = scan.nextLine();
+            String parts[] = querschnitt_in.split(" ");
+            
+            try
+            {
+                b_in = Double.parseDouble(parts[0]);
+                h_in = Double.parseDouble(parts[1]);
+                s_in = Double.parseDouble(parts[2]);
+                t_in = Double.parseDouble(parts[3]);
+            }
+            catch(InputMismatchException ex)
+            {
+                scan.next();
+                continue;
+            }
+            
+        }
+        while(b_in <= 0 || h_in <= 0 || s_in <= b_in || t_in <= h_in);
+        
+       
+        //fill objects
+
+        lkw = new LKW(breite_lkw, hoehe_lkw, gesamt_gewicht_in, firma, fahrer, achsenabstand_in);        
+        querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
+        traeger = new Traeger(laenge_bruecke_in, traegerDichte, querschnitt);
+        
+        position_max_biegemoment = -1;
+        biegemoment_werte = new double[(int)(traeger.getLaenge()+
+                        lkw.getAchsenAbstand())*10][(int)traeger.getLaenge()*10];
+        
+    }
+    
+    
+        
     private int getCase(int position, position)
     {
         if()
@@ -48,55 +173,6 @@ public class StatikApp
         else if()
             return 7;
     }
-    
-    
-    
-    public StatikApp() throws Exception
-    {
-        try
-        {
-            plotter = new Plotter(5, "Brückenposition in m", "Biegemoment in kNm",
-                    "Diagramm zum maximalen Biegemoment");
-        }
-        catch (Exception ignore) { }
-        
-        //Lukas Part
-         
-        Scanner scan = new Scanner (System.in);
-        //input
-        System.out.print("Geben Sie das Gesamtgewicht des Zweiachsers ein [5 - 10 t]: ");
-        double gesamt_gewicht_in = scan.nextDouble();
-
-        System.out.print("Geben Sie den Achsabstand des Zweiachsers ein [4 - 10 m]: ");
-        double achsenabstand_in = scan.nextDouble();
-
-        System.out.print("Geben Sie die Länge der Brücke ein [5 - 20 m]: ");
-        double laenge_bruecke_in = scan.nextDouble();
-
-        scan.nextLine(); /* !!! */
-
-        System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
-        String querschnitt_in = scan.nextLine();
-
-        String parts[] = querschnitt_in.split(" ");
-
-        double b_in = Double.parseDouble(parts[0]);
-        double h_in = Double.parseDouble(parts[1]);
-        double s_in = Double.parseDouble(parts[2]);
-        double t_in = Double.parseDouble(parts[3]);
-       
-        //fill objects
-
-        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, "LKW Walter", "Josef", achsenabstand_in);        
-        querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
-        traeger = new Traeger(laenge_bruecke_in, 7.85, querschnitt);
-        
-        position_max_biegemoment = -1;
-        biegemoment_werte = new double[(int)(traeger.getLaenge()+
-                        lkw.getAchsenAbstand())*10][(int)traeger.getLaenge()*10];
-        
-    }
-    
     
     public void berechne()
     {
@@ -159,33 +235,67 @@ public class StatikApp
         plotter.addDataSet(biegemoment_werte[position_max_biegemoment], "Biegemomente");
     }
     
-    public void print() throws Exception
-    {
-        //Phillip part
-        //....
-        System.out.println("----------Statikberechnung für:");
+    public void print()
+            throws Exception
+    {    
+        System.out.println("Programm zur Statikberechnung von Bruecken");
+        System.out.println("=========================================\n");
         
-        lkw.toString();
-        System.out.println("auf Brücke: Bruecke --> konst. Fahrbahndeckenlast: ??" + "Länge: " + traeger.getLaenge() + "m."); // Fahrbahndeckenlast?!
-        System.out.println("Gesamt-Gleichlast: ??"); //Gesamtgleichlast?!
-        querschnitt.toString();
+        System.out.println("Getaetigte Eingaben");
+        System.out.println("==================\n");
         
-        /* BEISPIEL TEXT
+        System.out.println("LKW");
+        System.out.println("* Firma: "+lkw.getFirma());
+        System.out.println("* Fahrer: " + lkw.getFahrer());
+        System.out.println(String.format("* Gesamtgewicht: %.2f kg", lkw.getGesamtGewicht()));
+        System.out.println(String.format("* Achsenabstand: %.2f m", lkw.getAchsenAbstand()));        
+        System.out.println();
         
-        LKW: LKW --> Achsabstand: 6,0m, Firma: BauInc, Fahrer: Max Mustermann, Last-Vorderachse: 32,70kN, Last-Hinterachse: 65,40kN.
-	Fahrzeug --> Höhe: 3,8m, Breite: 2,6m, Gesamtgewicht: 10000,00kg.
-	auf Brücke: Bruecke --> konst. Fahrbahndeckenlast: 3,00kN/m, Länge: 20,0m.
-	Gesamt-Gleichlast: 6,15kN/m.
-	Trägerpaar: Träger --> Länge: 20,0m, Dichte: 7,85kg/dm^3, Masse: 2242,27kg.
-	Querschnitt --> b: 30,0cm, h: 30,0cm, s: 1,1cm, t: 1,9cm
-	Querschnittsfläche: 142,82cm^2, Flächenträgheitsmoment: 24186,78cm^4.
-
-        MaxMomente= 702,90kNm  bei Brückenposition= 9,40m  (LKW-VA Position=15,40m)
-        Max. Biegespannung ist: 435,92N/mm^2
-        LKW darf Brücke NICHT befahren!!
+        System.out.println("Traeger");
+        System.out.println(String.format("* Laenge: %.2f m", traeger.getLaenge()));
+        System.out.println(String.format("* Gewicht: %.2f kg", traeger.getGewicht()));
+        System.out.println("* Querschnitt");
+        System.out.println(String.format("  * Hoehe: %.2f cm", traeger.getQuerschnitt().getHoehe()));
+        System.out.println(String.format("  * Breite: %.2f cm", traeger.getQuerschnitt().getHoehe()));
+        System.out.println(String.format("  * Stegbreite: %.2f cm", traeger.getQuerschnitt().getStegBreite()));
+        System.out.println(String.format("  * Steghoehe: %.2f cm", traeger.getQuerschnitt().getStegBreite()));
         
-        */
-                
+        System.out.println("Berechnungskonstanten");
+        System.out.println("=====================\n");
+        
+        System.out.println(String.format("Erdbeschleunigung: %.2f m/s^2", erdBeschleunigung));
+        System.out.println(String.format("Traegerdichte: %.2f kg/dm^3", traegerDichte));
+        System.out.println(String.format("Sicherheit Eigenlast: %.2f", sicherheitEigenlast));
+        System.out.println(String.format("Sicherheit Verkehrslast: %.2f", sicherheitVerkehrslast));
+        System.out.println(String.format("Eigenlast: %.2f N/m", eigenLast));
+        
+        berechne();
+        if(position_max_biegemoment == -1)
+            throw new Exception("Fehler bei der Berechnung!");
+        
+        System.out.println("Berechnungsergebnisse");
+        System.out.println("=====================\n");
+        
+        System.out.println(String.format("Gewichtskraft Hinterachse: %.2f N", lkw.achsLastHA() * erdBeschleunigung));
+        System.out.println(String.format("Gewichtskraft Vorderachse: %.2f N", lkw.achsLastVA() * erdBeschleunigung));
+        System.out.println(String.format("Querschnittsflaeche: %.2f mm^2", traeger.getQuerschnitt().getFlaeche()));
+        System.out.println(String.format("Flächentraegheitsmoment: %.2f mm^4", traeger.getQuerschnitt().getIy()));
+        System.out.println(String.format("Maximales Biegemoment: %.2f Nm", maxBiegemoment));
+        System.out.println(String.format("Maximale Biegespannung: %.2f N/mm^2", maxBiegespannung));
+        System.out.println(String.format("Vorderachsenposition bei dem auftretenden Biegemoment: %.2f m", position_max_biegemoment / 10.0));
+        
+        if(darfPassieren)
+        {
+            System.out.println("LKW darf passieren!");
+        }
+        else
+        {
+            System.out.println("LKW darf *nicht* passieren!");
+        }
+        
+        System.out.println("Beliebige Taste druecken, um das Diagramm anzuzeigen...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.next();
         plotter.plot();
     }
     
@@ -194,7 +304,6 @@ public class StatikApp
         try
         {
             StatikApp app = new StatikApp();
-            app.berechne();
             app.print();
         }
         catch (Exception ex)
