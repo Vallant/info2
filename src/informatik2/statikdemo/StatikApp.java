@@ -59,7 +59,9 @@ public class StatikApp
     
     public StatikApp() throws Exception
     {
-                try
+                System.out.println("Programm zur Statikberechnung von Bruecken");
+        System.out.println("=========================================\n");
+        try
         {
             plotter = new Plotter(5, "Brückenposition in m", "Biegemoment in kNm",
                     "Diagramm zum maximalen Biegemoment");
@@ -201,10 +203,8 @@ public class StatikApp
     public void print()
             throws Exception
     {    
-        System.out.println("Programm zur Statikberechnung von Bruecken");
-        System.out.println("=========================================\n");
         
-        System.out.println("Getaetigte Eingaben");
+        System.out.println("\nGetaetigte Eingaben");
         System.out.println("==================\n");
         
         System.out.println("LKW");
