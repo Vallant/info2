@@ -144,9 +144,9 @@ public class StatikApp
                   case 3:
                       belastung = (x / brueckenlaenge) * (brueckenlaenge-position_ha) * lkw.achsLastHA();
                   case 4:
-                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_ha * lkw.achsLastHA();
-                  case 5:
                       belastung = 0;
+                  case 5:
+                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_ha * lkw.achsLastHA();
                   case 6:
                       belastung = 0;
                   case 7:
