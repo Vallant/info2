@@ -37,15 +37,15 @@ public class StatikApp
     
     private static int getCase(int position_va, int position_ha, int x, int laenge)
     {
-        if     (position_ha < 0 && x < position_va) 
+        if     (position_ha <= 0 && x <= position_va) 
             return 1;
-        else if(position_ha < 0 && x < position_va)
+        else if(position_ha <= 0 && x >  position_va)
             return 2;
-        else if(position_ha > 0 && position_va < laenge && x < position_ha)
+        else if(position_ha > 0 && position_va <= laenge && x <= position_ha)
             return 3;
-        else if(position_ha > 0 && position_va < laenge && x > position_ha && x < position_va) 
+        else if(position_ha > 0 && position_va <= laenge && x >  position_ha && x < position_va) 
             return 4;
-        else if(position_ha > 0 && position_va < laenge && x > position_va)
+        else if(position_ha > 0 && position_va <= laenge && x >  position_va)
             return 5;
         else if(position_va > laenge && x < position_ha)
             return 6;
@@ -140,15 +140,15 @@ public class StatikApp
               switch(auswahl)
               {
                   case 1:
-                      belastung = 0;
+                      belastung = (x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA();
                   case 2:
-                      belastung = 0;
+                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA();
                   case 3:
-                      belastung = 0;
+                      belastung = (x / brueckenlaenge) * (brueckenlaenge-position_ha) * lkw.achsLastHA();
                   case 4:
                       belastung = 0;
                   case 5:
-                      belastung = 0;
+                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_ha * lkw.achsLastHA();
                   case 6:
                       belastung = 0;
                   case 7:
