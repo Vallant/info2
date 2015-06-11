@@ -33,9 +33,9 @@ public class StatikApp
     
     private int getCase(int position_va, int position_ha, int position, int laenge)
     {
-        if(position_ha < 0 && )
+        if     (position_ha < 0 && position < position_va)
             return 1;
-        else if(position_ha < 0 &&)
+        else if(position_ha < 0 && position < position_va)
             return 2;
         else if(position_ha > 0 && position_va < laenge && position < position_ha)
             return 3;
