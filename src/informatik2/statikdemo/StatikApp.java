@@ -31,7 +31,7 @@ public class StatikApp
     private int position_max_biegemoment;
     
     
-    private int getCase(int position_va, int position_ha, int x, int laenge)
+    private static int getCase(int position_va, int position_ha, int x, int laenge)
     {
         if     (position_ha < 0 && x < position_va) 
             return 1;
@@ -104,8 +104,9 @@ public class StatikApp
     {
         
       
-        int laenge = (int)lkw.getAchsenAbstand(); // LKW Länge
-        int max_position = (int)(traeger.getLaenge()*10) + (laenge*10); //Letzte berechnung
+        int lkwlaenge = (int)lkw.getAchsenAbstand(); // LKW Länge
+        int max_position = (int)(traeger.getLaenge()*10) + (lkwlaenge*10); //Letzte berechnung
+        int brueckenlaenge = (int)traeger.getLaenge();
         int position_va;
         int position_ha;
         int auswahl;
@@ -120,13 +121,13 @@ public class StatikApp
 
         for(position_va=0 ; position_va < max_position ; position_va+=10)   //lkw position
         {
-            position_ha = position_va - laenge;
-            last = ((position_va/laenge)* ((laenge-position_va) / laenge)) / 2 * 3000 * 
-                    laenge*laenge;
+            position_ha = position_va - lkwlaenge;
+            last = ((position_va/lkwlaenge)* ((lkwlaenge-position_va) / lkwlaenge)) / 2 * 3000 * 
+                    lkwlaenge*lkwlaenge;
                         
-            for(i = 0 ; x < max_position ; x+=10)
+            for(x = 0 ; x < max_position ; x+=10)
             {
-              auswahl = lkwCase(position_va, position_ha, x, traeger.getLaenge());
+              auswahl = StatikApp.getCase(position_va, position_ha, x, brueckenlaenge);
               switch(auswahl)
               {
                   case 1:
