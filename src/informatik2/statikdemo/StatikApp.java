@@ -138,13 +138,13 @@ public class StatikApp
               switch(auswahl)
               {
                   case 1:
-                      belastung = 0;
+                      belastung = (x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA();
                   case 2:
-                      belastung = 0;
+                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA();
                   case 3:
-                      belastung = 0;
+                      belastung = (x / brueckenlaenge) * (brueckenlaenge-position_ha) * lkw.achsLastHA();
                   case 4:
-                      belastung = 0;
+                      belastung = ((brueckenlaenge-x) / brueckenlaenge) * position_ha * lkw.achsLastHA();
                   case 5:
                       belastung = 0;
                   case 6:
