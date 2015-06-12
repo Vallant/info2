@@ -8,7 +8,10 @@ package informatik2.statikdemo;
 import informatik2.statik.LKW;
 import informatik2.statik.Querschnitt;
 import informatik2.statik.Traeger;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -69,15 +72,15 @@ public class StatikApp
                     "Diagramm zum maximalen Biegemoment");
         }
         catch (Exception ignore) { }
-        
-        //Lukas Part
          
         Scanner scan = new Scanner (System.in);
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         //input
-        System.out.print("Geben Sie das Gesamtgewicht des Zweiachsers ein [5 - 10 t]: ");
         double gesamt_gewicht_in = 0;
         double achsen_abstand_in = 0;
         double laenge_bruecke_in = 0;
+        double breite_in = 0;
+        double hoehe_in = 0;
         double b_in = 0;
         double h_in = 0;
         double s_in = 0;
@@ -85,6 +88,7 @@ public class StatikApp
         String querschnitt_in = "";
         String fahrer_in = "";
         String firma_in = "";
+        
 
         do
         {
@@ -112,6 +116,30 @@ public class StatikApp
         
         do
         {
+            System.out.print("Geben Sie die Breite des Fahrzeugs ein [1 - 5 m]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            breite_in = scan.nextDouble();
+        }
+        while (breite_in < 1 || breite_in > 5);
+        
+                do
+        {
+            System.out.print("Geben Sie die Hoehe des Fahrzeugs ein [1 - 10 m]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            hoehe_in = scan.nextDouble();
+        }
+        while (hoehe_in < 1 || hoehe_in > 10);
+        
+        do
+        {
             System.out.print("Geben Sie die Länge der Brücke ein [5 - 20 m]: ");
             if(!scan.hasNextDouble())
             {
@@ -121,55 +149,42 @@ public class StatikApp
             laenge_bruecke_in = scan.nextDouble();
         }
         while (laenge_bruecke_in < 5 || laenge_bruecke_in > 20);
-
-        scan.nextLine(); /* !!! */
         
         do
         {
             System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
-            if(!scan.hasNextDouble())
-            {
-                scan.next();
-                continue;
-            }
-            querschnitt_in = scan.nextLine();
-        
+            querschnitt_in = in.readLine();
 
             String parts[] = querschnitt_in.split(" ");
 
             try
             {
-            b_in = Double.parseDouble(parts[0]);
-            h_in = Double.parseDouble(parts[1]);
-            s_in = Double.parseDouble(parts[2]);
-            t_in = Double.parseDouble(parts[3]);
-            } catch (InputMismatchException ex) { }
-        
-        } while (b_in < s_in || h_in < 2*t_in || b_in <= 0 || h_in <= 0 ||
-                s_in <= 0 || t_in <= 0);
+                b_in = Double.parseDouble(parts[0]);
+             h_in = Double.parseDouble(parts[1]);
+             s_in = Double.parseDouble(parts[2]);
+             t_in = Double.parseDouble(parts[3]);
+            }
+            catch(  NumberFormatException | ArrayIndexOutOfBoundsException ex)
+            {}
+        } while (b_in <= 0 || h_in <= 0 || s_in <= 0 || t_in <= 0 || b_in <= s_in || h_in <= 2*t_in);
         
         do
         {
-            System.out.println("Geben Sie den Namen des Fahrers ein: ");
-            fahrer_in = scan.nextLine();
+            System.out.print("Geben Sie den Namen des Fahrers ein: ");
+            fahrer_in = in.readLine();
         } while (fahrer_in.isEmpty());
         
         do
         {
-            System.out.println("Geben Sie den Namen der Firma ein: ");
-            firma_in = scan.nextLine();
+            System.out.print("Geben Sie den Namen der Firma ein: ");
+            firma_in = in.readLine();
         } while (firma_in.isEmpty());
         
         //fill objects
 
-        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, firma_in, fahrer_in, achsen_abstand_in);        
+        lkw = new LKW(hoehe_in, breite_in, gesamt_gewicht_in * 1000, firma_in, fahrer_in, achsen_abstand_in);        
         querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
-        traeger = new Traeger(laenge_bruecke_in, 7.85, querschnitt);
-        
-        position_max_biegemoment = -1;
-        biegemoment_werte = new double[(int)(traeger.getLaenge()+
-                        lkw.getAchsenAbstand())*10][(int)traeger.getLaenge()*10];
-        
+        traeger = new Traeger(laenge_bruecke_in, traegerDichte, querschnitt);
         
         position_max_biegemoment = -1;
         biegemoment_werte = new double[(int)(traeger.getLaenge()+
@@ -272,27 +287,27 @@ public class StatikApp
                   }
                   case 3:
                   {
-                      belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                     // belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
                       break;
                   }
                   case 4:
                   {    
-                      belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                    //  belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
                       break;
                   }
                   case 5:
                   {
-                      belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                     // belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
                       break;
                   }
                   case 6:
                   {
-                      belastung = (last * 1,5 + M_Z_2 * 2) / 2;
+                     // belastung = (last * 1,5 + M_Z_2 * 2) / 2;
                       break;
                   }
                   case 7:
                   {
-                      belastung = (last * 1,5 + M_Z_2 * 2) / 2;
+                     // belastung = (last * 1,5 + M_Z_2 * 2) / 2;
                       break;
                   }
               }
@@ -334,10 +349,10 @@ public class StatikApp
         System.out.println(String.format("* Laenge: %.2f m", traeger.getLaenge()));
         System.out.println(String.format("* Gewicht: %.2f kg", traeger.getGewicht()));
         System.out.println("* Querschnitt");
-        System.out.println(String.format("  * Hoehe: %.2f cm", traeger.getQuerschnitt().getHoehe()));
-        System.out.println(String.format("  * Breite: %.2f cm", traeger.getQuerschnitt().getHoehe()));
-        System.out.println(String.format("  * Stegbreite: %.2f cm", traeger.getQuerschnitt().getStegBreite()));
-        System.out.println(String.format("  * Steghoehe: %.2f cm", traeger.getQuerschnitt().getStegBreite()));
+        System.out.println(String.format("  * Hoehe: %.2f mm", traeger.getQuerschnitt().getHoehe()));
+        System.out.println(String.format("  * Breite: %.2f mm", traeger.getQuerschnitt().getHoehe()));
+        System.out.println(String.format("  * Stegbreite: %.2f mm", traeger.getQuerschnitt().getStegBreite()));
+        System.out.println(String.format("  * Steghoehe: %.2f mm", traeger.getQuerschnitt().getStegBreite()));
         
         System.out.println("Berechnungskonstanten");
         System.out.println("=====================\n");
