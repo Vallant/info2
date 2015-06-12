@@ -10,8 +10,6 @@ import informatik2.statik.Querschnitt;
 import informatik2.statik.Traeger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -28,7 +26,7 @@ public class StatikApp
     private final LKW lkw;
     private final Querschnitt querschnitt;
     private double[][] biegemoment_werte;
-    private int position_max_biegemoment;
+    private double position_max_biegemoment;
     private boolean darfPassieren;
     static private final double erdBeschleunigung = 9.81; // m/s^2
     static private final double maxZulaessigBiegespannung = 300; // N/mm^2
@@ -37,27 +35,32 @@ public class StatikApp
     static private final double sicherheitVerkehrslast = 2;
     static private final double eigenLast = 3000; // N/m
     static private final int anzahlTraeger = 2;
-    private double maxBiegespannung;
+    private double maxBiegemoment;
+    static private final double e = 0.000001;
     
-    
-    private static int getCase(int position_va, int position_ha, int x, int laenge)
+    private static boolean equalsLess(double value1, double value2)
     {
-        if     (position_ha <= 0 && x <= position_va) 
+        if(value1 < value2 || Math.abs(value1-value2) <= e)
+            return true;
+        return false;
+    }
+    
+    private static int getCase(double position_va, double position_ha, double x, double laenge)
+    {
+        if(equalsLess(position_ha, 0) && equalsLess(x, position_va))
             return 1;
-        else if(position_ha <= 0 && x >  position_va)
+        if(equalsLess(position_ha, 0) && x >  position_va)
             return 2;
-        else if(position_ha > 0 && position_va <= laenge && x <= position_ha)
+        if(position_ha > 0 && equalsLess(x, position_va) && equalsLess(x, position_ha))
             return 3;
-        else if(position_ha > 0 && position_va <= laenge && x >  position_ha && x < position_va) 
+        if(position_ha > 0 && x > position_ha && equalsLess(x, position_va)) 
             return 4;
-        else if(position_ha > 0 && position_va <= laenge && x >  position_va)
+        if(position_ha > 0 && x > position_ha && x > position_va && equalsLess(position_va, laenge))
             return 5;
-        else if(position_va > laenge && x < position_ha)
+        if(position_ha > 0 && equalsLess(x, position_ha) && position_va > laenge)
             return 6;
-        else if(position_va > laenge && x > position_ha)
-            return 7;
         
-        return 0;
+        return 7;
     }
     
     
@@ -198,137 +201,110 @@ public class StatikApp
     {
         
       
-        int lkwlaenge = (int)lkw.getAchsenAbstand(); // LKW Länge
-        int max_position = (int)(traeger.getLaenge()*10) + (lkwlaenge*10);
-        int brueckenlaenge = (int)traeger.getLaenge();
-        int position_va;
-        int position_ha;
+        double lkwlaenge = lkw.getAchsenAbstand(); // LKW Länge
+        double max_position = (traeger.getLaenge()) + (lkwlaenge);
+        double brueckenlaenge = traeger.getLaenge();
+        double position_va;
+        double  position_ha;
         int auswahl;
-        double last = 0;
         double belastung = 0;
         
 
-        int x = 0;
+        double x = 0;
         
         // N
         // * 10 : Weil brueckenlaenge in m, traegerDichte aber in kg / dm^3
         // / 10000 : Weil flaeche in mm^2, aber traegerDichte in kg / dm^3
-        double gewichtskraft_traeger = traegerDichte * erdBeschleunigung * brueckenlaenge * 10 * traeger.getQuerschnitt().getFlaeche() / 10000;
+        double gewichtskraft_traeger = traegerDichte * erdBeschleunigung * brueckenlaenge * 10 * traeger.getQuerschnitt().getFlaeche() / 10000.0;
 ;
         // N/m
         double streckenlast_traeger_gesamt = (eigenLast + gewichtskraft_traeger / brueckenlaenge) * sicherheitEigenlast;
-        double p_z_va = lkw.achsLastVA() * erdBeschleunigung * sicherheitVerkehrslast / anzahlTraeger;
-        double p_z_ha = lkw.achsLastHA() * erdBeschleunigung * sicherheitVerkehrslast / anzahlTraeger;
         
-        for(position_va=0 ; position_va < max_position ; position_va+=10)
+        double p_z_va = lkw.achsLastVA() * erdBeschleunigung * sicherheitVerkehrslast / (double)anzahlTraeger;
+        double p_z_ha = lkw.achsLastHA() * erdBeschleunigung * sicherheitVerkehrslast / (double)anzahlTraeger;
+        double m_d = 0;
+        double m_z_ha = 0;
+        double m_z_va = 0;
+        double biegeSpannung = 0;
+        
+        for(position_va=0 ; position_va < max_position ; position_va+=0.1, m_z_ha = 0, m_z_va = 0, m_d = 0, biegeSpannung = 0)
         {
             position_ha = position_va - lkwlaenge;
-            last = ((position_va/lkwlaenge)* ((lkwlaenge-position_va) / lkwlaenge)) / 2 * 3000 * 
-                     lkwlaenge*lkwlaenge;
             
-            for(x = 0 ; x < max_position ; x+=10)
+            
+            for(x = 0 ; x < brueckenlaenge ; x += 0.1)
             {
 
                 // Statisches Moment!!!
                 // Nm
-                double m_d = (x * (brueckenlaenge - x)) / 2.0 * streckenlast_traeger_gesamt;
-                
-                //Fall 1
-                double m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                
-                //Fall 2
-                m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
-                
-                //Fall 3
-                m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                double m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                
-                // Fall 4
-                m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
-                
-                // Fall 5
-                m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
-                m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
-                
-                // Fall 6
-                m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                
-                //Fall 7
-                m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
-                
-                
-                // *1000 weil m_d.. in Nm, wir aber Nmm brauchen
-                // Nmm / mm^4 * mm = N/mm^2 --> Spannung
-                double biegeSpannung = (m_d + m_z_ha + m_z_va) * 1000 / 
-                        traeger.getQuerschnitt().getIy() * 
-                        traeger.getQuerschnitt().getHoehe() / 2;
-                
-                
-                
-                        
+                m_d = (x * (brueckenlaenge - x)) / 2.0 * streckenlast_traeger_gesamt;
                 
               auswahl = StatikApp.getCase(position_va, position_ha, x, brueckenlaenge);
+              
               switch(auswahl)
               {
-//                1. MZ_1 (x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA();
-//                2. MZ_1 (brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA();
-//                3. MZ_2 (x / brueckenlaenge) * (brueckenlaenge-position_ha) * lkw.achslastHA();
-//                4. MZ_2 ((brueckenlanege-x) / brueckenlaenge) * position_ha * lkw.achslastHA();
                   case 1:
                   {
-                      belastung = (last * 1.5 + (((x / brueckenlaenge) * (brueckenlaenge-position_va) * lkw.achsLastVA()) * 2)) / 2;
+                      m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                      m_z_ha = 0;
                       break;
                   }
                   case 2:
                   {
-                      belastung = (last * 1.5 + (((brueckenlaenge-x) / brueckenlaenge) * position_va * lkw.achsLastVA()) * 2) / 2;
+                      m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                      m_z_ha = 0;
                       break;
                   }
                   case 3:
                   {
-                     // belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                      m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                      m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
                       break;
                   }
                   case 4:
-                  {    
-                    //  belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                  {
+                      m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
                       break;
                   }
                   case 5:
                   {
-                     // belastung = (last * 1,5 + M_Z_1 * 2 + M_Z_2 * 2) / 2 ;
+                      m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
                       break;
                   }
                   case 6:
                   {
-                     // belastung = (last * 1,5 + M_Z_2 * 2) / 2;
+                      m_z_va = 0;
+                      m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
                       break;
                   }
                   case 7:
                   {
-                     // belastung = (last * 1,5 + M_Z_2 * 2) / 2;
+                      m_z_va = 0;
+                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
                       break;
                   }
               }
-              biegemoment_werte[position_va][x] = belastung;
-              if(belastung > maxBiegespannung)
+              belastung = m_d + m_z_ha + m_z_va;
+              biegemoment_werte[(int)(position_va * 10)][(int)(x * 10)] = belastung;
+              biegeSpannung = belastung * 1000 / 
+                        traeger.getQuerschnitt().getIy() * 
+                        traeger.getQuerschnitt().getHoehe() / 2;
+              if(belastung > maxBiegemoment)
               {
-                maxBiegespannung = belastung;
+                maxBiegemoment = belastung;
                 position_max_biegemoment = x;
               }
+              
+              if(biegeSpannung > maxZulaessigBiegespannung)
+                  darfPassieren = false;
               
             }
            
         }
         
-        if(maxBiegespannung > maxZulaessigBiegespannung)
-            darfPassieren = false;
-            
-        
-
-
-        plotter.addDataSet(biegemoment_werte[position_max_biegemoment], "Biegemomente");
+        plotter.addDataSet(biegemoment_werte[(int)(position_max_biegemoment*10)], "Maximale Biegemomente");
     }
     
     public void print()
@@ -363,7 +339,6 @@ public class StatikApp
         System.out.println(String.format("Sicherheit Verkehrslast: %.2f", sicherheitVerkehrslast));
         System.out.println(String.format("Eigenlast: %.2f N/m", eigenLast));
         
-        berechne();
         if(position_max_biegemoment == -1)
             throw new Exception("Fehler bei der Berechnung!");
         
@@ -374,8 +349,8 @@ public class StatikApp
         System.out.println(String.format("Gewichtskraft Vorderachse: %.2f N", lkw.achsLastVA() * erdBeschleunigung));
         System.out.println(String.format("Querschnittsflaeche: %.2f mm^2", traeger.getQuerschnitt().getFlaeche()));
         System.out.println(String.format("Flächentraegheitsmoment: %.2f mm^4", traeger.getQuerschnitt().getIy()));
-        System.out.println(String.format("Maximale Biegespannung: %.2f N/mm^2", maxBiegespannung));
-        System.out.println(String.format("Vorderachsenposition bei dem auftretenden Biegemoment: %.2f m", position_max_biegemoment / 10.0));
+        System.out.println(String.format("Maximale Biegespannung: %.2f Nm", maxBiegemoment));
+        System.out.println(String.format("Vorderachsenposition bei dem auftretenden Biegemoment: %.2f m", position_max_biegemoment));
         
         if(darfPassieren)
         {
@@ -387,8 +362,8 @@ public class StatikApp
         }
         
         System.out.println("Beliebige Taste druecken, um das Diagramm anzuzeigen...");
-        Scanner scanner = new Scanner(System.in);
-        scanner.next();
+        InputStreamReader reader = new InputStreamReader(System.in);
+        reader.read();
         plotter.plot();
     }
     
@@ -397,6 +372,7 @@ public class StatikApp
         try
         {
             StatikApp app = new StatikApp();
+            app.berechne();
             app.print();
         }
         catch (Exception ex)
