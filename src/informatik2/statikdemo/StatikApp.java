@@ -32,6 +32,7 @@ public class StatikApp
     static private final double sicherheitEigenlast = 1.5;
     static private final double sicherheitVerkehrslast = 2;
     static private final double eigenLast = 3000; // N/m
+    static private final int anzahlTraeger = 2;
     private double maxBiegespannung;
     
     
@@ -128,6 +129,16 @@ public class StatikApp
 
         int x = 0;
         
+        // N
+        // * 10 : Weil brueckenlaenge in m, traegerDichte aber in kg / dm^3
+        // / 10000 : Weil flaeche in mm^2, aber traegerDichte in kg / dm^3
+        double gewichtskraft_traeger = traegerDichte * erdBeschleunigung * brueckenlaenge * 10 * traeger.getQuerschnitt().getFlaeche() / 10000;
+;
+        // N/m
+        double streckenlast_traeger_gesamt = (eigenLast + gewichtskraft_traeger / brueckenlaenge) * sicherheitEigenlast;
+        double p_z_va = lkw.achsLastVA() * erdBeschleunigung * sicherheitVerkehrslast / anzahlTraeger;
+        double p_z_ha = lkw.achsLastHA() * erdBeschleunigung * sicherheitVerkehrslast / anzahlTraeger;
+        
         for(position_va=0 ; position_va < max_position ; position_va+=10)
         {
             position_ha = position_va - lkwlaenge;
@@ -136,6 +147,45 @@ public class StatikApp
             
             for(x = 0 ; x < max_position ; x+=10)
             {
+
+                // Statisches Moment!!!
+                // Nm
+                double m_d = (x * (brueckenlaenge - x)) / 2.0 * streckenlast_traeger_gesamt;
+                
+                //Fall 1
+                double m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                
+                //Fall 2
+                m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                
+                //Fall 3
+                m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                double m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                
+                // Fall 4
+                m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                
+                // Fall 5
+                m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                
+                // Fall 6
+                m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                
+                //Fall 7
+                m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                
+                
+                // *1000 weil m_d.. in Nm, wir aber Nmm brauchen
+                // Nmm / mm^4 * mm = N/mm^2 --> Spannung
+                double biegeSpannung = (m_d + m_z_ha + m_z_va) * 1000 / 
+                        traeger.getQuerschnitt().getIy() * 
+                        traeger.getQuerschnitt().getHoehe() / 2;
+                
+                
+                
+                        
                 
               auswahl = StatikApp.getCase(position_va, position_ha, x, brueckenlaenge);
               switch(auswahl)
