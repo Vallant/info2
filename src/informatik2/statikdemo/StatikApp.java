@@ -234,7 +234,6 @@ public class StatikApp
             
             for(x = 0 ; x < brueckenlaenge ; x += 0.1)
             {
-
                 // Statisches Moment!!!
                 // Nm
                 m_d = (x * (brueckenlaenge - x)) / 2.0 * streckenlast_traeger_gesamt;
@@ -258,31 +257,31 @@ public class StatikApp
                   case 3:
                   {
                       m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                      m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                      m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_ha);
                       break;
                   }
                   case 4:
                   {
                       m_z_va = p_z_va * (x / brueckenlaenge) * (brueckenlaenge - position_va);
-                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_ha;
                       break;
                   }
                   case 5:
                   {
                       m_z_va = p_z_va * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
-                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_ha;
                       break;
                   }
                   case 6:
                   {
                       m_z_va = 0;
-                      m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_va);
+                      m_z_ha = p_z_ha * (x / brueckenlaenge) * (brueckenlaenge - position_ha);
                       break;
                   }
                   case 7:
                   {
                       m_z_va = 0;
-                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_va;
+                      m_z_ha = p_z_ha * ((brueckenlaenge - x) / brueckenlaenge) * position_ha;
                       break;
                   }
               }
