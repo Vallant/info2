@@ -74,29 +74,75 @@ public class StatikApp
         Scanner scan = new Scanner (System.in);
         //input
         System.out.print("Geben Sie das Gesamtgewicht des Zweiachsers ein [5 - 10 t]: ");
-        double gesamt_gewicht_in = scan.nextDouble();
+        double gesamt_gewicht_in = 0;
+        double achsen_abstand_in = 0;
+        double laenge_bruecke_in = 0;
+        double b_in = 0;
+        double h_in = 0;
+        double s_in = 0;
+        double t_in = 0;
+        String querschnitt_in = "";
+        String cmp = "";
 
-        System.out.print("Geben Sie den Achsabstand des Zweiachsers ein [4 - 10 m]: ");
-        double achsenabstand_in = scan.nextDouble();
-
-        System.out.print("Geben Sie die Länge der Brücke ein [5 - 20 m]: ");
-        double laenge_bruecke_in = scan.nextDouble();
+        do
+        {
+            System.out.print("Geben Sie das Gesamtgewicht des Zweiachsers ein [5 - 10 t]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            gesamt_gewicht_in = scan.nextDouble();
+        }  
+        while(gesamt_gewicht_in < 5 || gesamt_gewicht_in > 10);
+        
+        do
+        {
+            System.out.print("Geben Sie den Achsabstand des Zweiachsers ein [4 - 10 m]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            achsen_abstand_in = scan.nextDouble();
+        }
+        while (achsen_abstand_in < 4 || achsen_abstand_in > 10);
+        
+        do
+        {
+            System.out.print("Geben Sie die Länge der Brücke ein [5 - 20 m]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            laenge_bruecke_in = scan.nextDouble();
+        }
+        while (laenge_bruecke_in < 5 || laenge_bruecke_in > 20);
 
         scan.nextLine(); /* !!! */
 
-        System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
-        String querschnitt_in = scan.nextLine();
+        do
+        {
+            System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
+            if(!scan.hasNextDouble())
+            {
+                scan.next();
+                continue;
+            }
+            querschnitt_in = scan.nextLine();
+        } while (querschnitt_in.equals(cmp));
 
         String parts[] = querschnitt_in.split(" ");
 
-        double b_in = Double.parseDouble(parts[0]);
-        double h_in = Double.parseDouble(parts[1]);
-        double s_in = Double.parseDouble(parts[2]);
-        double t_in = Double.parseDouble(parts[3]);
+        b_in = Double.parseDouble(parts[0]);
+        h_in = Double.parseDouble(parts[1]);
+        s_in = Double.parseDouble(parts[2]);
+        t_in = Double.parseDouble(parts[3]);
        
         //fill objects
 
-        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, "LKW Walter", "Josef", achsenabstand_in);        
+        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, "LKW Walter", "Josef", achsen_abstand_in);        
         querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
         traeger = new Traeger(laenge_bruecke_in, 7.85, querschnitt);
         
