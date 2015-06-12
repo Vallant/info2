@@ -8,6 +8,7 @@ package informatik2.statikdemo;
 import informatik2.statik.LKW;
 import informatik2.statik.Querschnitt;
 import informatik2.statik.Traeger;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
@@ -82,7 +83,8 @@ public class StatikApp
         double s_in = 0;
         double t_in = 0;
         String querschnitt_in = "";
-        String cmp = "";
+        String fahrer_in = "";
+        String firma_in = "";
 
         do
         {
@@ -121,7 +123,7 @@ public class StatikApp
         while (laenge_bruecke_in < 5 || laenge_bruecke_in > 20);
 
         scan.nextLine(); /* !!! */
-
+        
         do
         {
             System.out.print("Geben Sie die Querschnittsmaße des Trägers ein [b h s t (in cm)]: ");
@@ -131,18 +133,36 @@ public class StatikApp
                 continue;
             }
             querschnitt_in = scan.nextLine();
-        } while (querschnitt_in.equals(cmp));
+        
 
-        String parts[] = querschnitt_in.split(" ");
+            String parts[] = querschnitt_in.split(" ");
 
-        b_in = Double.parseDouble(parts[0]);
-        h_in = Double.parseDouble(parts[1]);
-        s_in = Double.parseDouble(parts[2]);
-        t_in = Double.parseDouble(parts[3]);
-       
+            try
+            {
+            b_in = Double.parseDouble(parts[0]);
+            h_in = Double.parseDouble(parts[1]);
+            s_in = Double.parseDouble(parts[2]);
+            t_in = Double.parseDouble(parts[3]);
+            } catch (InputMismatchException ex) { }
+        
+        } while (b_in < s_in || h_in < 2*t_in || b_in <= 0 || h_in <= 0 ||
+                s_in <= 0 || t_in <= 0);
+        
+        do
+        {
+            System.out.println("Geben Sie den Namen des Fahrers ein: ");
+            fahrer_in = scan.nextLine();
+        } while (fahrer_in.isEmpty());
+        
+        do
+        {
+            System.out.println("Geben Sie den Namen der Firma ein: ");
+            firma_in = scan.nextLine();
+        } while (firma_in.isEmpty());
+        
         //fill objects
 
-        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, "LKW Walter", "Josef", achsen_abstand_in);        
+        lkw = new LKW(4.0, 2.6, gesamt_gewicht_in, firma_in, fahrer_in, achsen_abstand_in);        
         querschnitt = new Querschnitt (b_in, h_in, s_in, t_in); 
         traeger = new Traeger(laenge_bruecke_in, 7.85, querschnitt);
         
